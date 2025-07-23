@@ -1,11 +1,16 @@
 import dotenv from 'dotenv';
 dotenv.config({ quiet: true});
-import express from 'express';
-
 import connectDB from './db/index.js';
-const app= express();
-app.listen(process.env.PORT || 3000,()=>{
-    console.log(`server is running on port ${process.env.PORT}`)
+import { app } from './app.js';
+connectDB()
+.then(()=>{
+    app.on("error",(error)=>{
+        console.log("Application Failed to Launch !!!", error)
+    })
+    app.listen(process.env.PORT||3000,()=>{
+        console.log("Server is running on port :",process.env.PORT)
+    })
 })
-
-connectDB();
+.catch((err)=>{
+    console.log("MongoDB Connection Function error ",err)
+})
